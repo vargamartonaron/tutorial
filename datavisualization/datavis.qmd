@@ -1,0 +1,531 @@
+---
+title: "1_data_visualization.qmd"
+output: html_document
+date: "2024-12-28"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+library(palmerpenguins)
+library(ggthemes)
+```
+
+```{r}
+penguins
+```
+```{r}
+glimpse(penguins)
+```
+
+```{r}
+ggplot(data = penguins)
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm, y = body_mass_g)
+)
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm, y = body_mass_g)
+) +
+  geom_point()
+#> Warning: Removed 2 rows containing missing values or values outside the scale range
+#> (`geom_point()`).
+#> ggplot(
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm, y = body_mass_g, color = species)
+) +
+  geom_point()
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm, y = body_mass_g, color = species)
+) +
+  geom_point() +
+  geom_smooth(method = "lm")
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm, y = body_mass_g)
+) +
+  geom_point(mapping = aes(color = species)) +
+  geom_smooth(method = "lm")
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm, y = body_mass_g)
+) +
+  geom_point(mapping = aes(color = species, shape = species)) +
+  geom_smooth(method = "lm")
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm, y = body_mass_g)
+) +
+  geom_point(aes(color = species, shape = species)) +
+  geom_smooth(method = "lm") +
+  labs(
+    title = "Body mass and flipper length",
+    subtitle = "Dimensions for Adelie, Chinstrap, and Gentoo Penguins",
+    x = "Flipper length (mm)", y = "Body mass (g)",
+    color = "Species", shape = "Species"
+  ) +
+  scale_color_colorblind()
+```
+#Feladatok
+1.
+```{r}
+nrow(penguins)  # Sorok száma
+ncol(penguins)  # Oszlopok száma
+```
+2.
+```{r}
+?penguins  
+help(penguins)
+```
+3.
+```{r}
+install.packages("palmerpenguins")
+library(palmerpenguins)
+library(ggplot2)
+
+ggplot(data = penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_point(color = "blue", alpha = 0.7) +
+  labs(
+    title = "Szórásdiagram: Bill Length vs. Bill Depth",
+    x = "Bill Length (mm)",
+    y = "Bill Depth (mm)"
+  ) +
+  theme_minimal()
+```
+4.
+```{r}
+library(ggplot2)
+library(palmerpenguins)
+
+# Boxplot 
+ggplot(data = penguins, aes(x = species, y = bill_depth_mm, fill = species)) +
+  geom_boxplot() +
+  labs(
+    title = "Csőrmélység (bill_depth_mm) fajonként",
+    x = "Pingvin faj",
+    y = "Csőrmélység (mm)"
+  ) +
+  theme_minimal()
+```
+
+5.
+```{r}
+ggplot(data = penguins) + 
+  geom_point()
+```
+
+
+```{r}
+ggplot(data = penguins, aes(x = bill_length_mm, y = bill_depth_mm)) + 
+  geom_point()
+
+```
+6.
+```{r}
+library(ggplot2)
+library(palmerpenguins)
+
+penguins_with_na <- penguins
+penguins_with_na$bill_depth_mm[c(1, 5, 10)] <- NA
+
+ggplot(data = penguins_with_na, aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_point(na.rm = TRUE) +
+  labs(
+    title = "Pontdiagram: Csőr hossza és mélysége (NA értékek nélkül)",
+    x = "Csőr hossza (mm)",
+    y = "Csőr mélysége (mm)"
+  ) +
+  theme_minimal()
+
+```
+7.
+```{r}
+ggplot(data = penguins_with_na, aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_point(na.rm = TRUE) +
+  labs(
+    title = "Pontdiagram: Csőr hossza és mélysége (NA értékek nélkül)",
+    x = "Csőr hossza (mm)",
+    y = "Csőr mélysége (mm)",
+    caption = "Az adatok a palmerpenguins csomagból származnak."
+  ) +
+  theme_minimal()
+```
+```{r}
+?labs
+
+```
+8.
+```{r}
+#Global
+ggplot(data = penguins, aes(x = bill_length_mm, y = bill_depth_mm, color = species)) +
+  geom_point() +
+  labs(
+    title = "Pontdiagram: Csőr hossza és mélysége fajonként",
+    x = "Csőr hossza (mm)",
+    y = "Csőr mélysége (mm)",
+    caption = "Az adatok a palmerpenguins csomagból származnak."
+  ) +
+  theme_minimal()
+
+```
+```{r}
+#Geom
+ggplot(data = penguins) +
+  geom_point(aes(x = bill_length_mm, y = bill_depth_mm, color = species)) +
+  labs(
+    title = "Pontdiagram: Csőr hossza és mélysége fajonként",
+    x = "Csőr hossza (mm)",
+    y = "Csőr mélysége (mm)",
+    caption = "Az adatok a palmerpenguins csomagból származnak."
+  ) +
+  theme_minimal()
+```
+9.
+```{r}
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm, y = body_mass_g, color = island)
+) +
+  geom_point() +
+  geom_smooth(se = FALSE)
+```
+10
+```{r}
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm, y = body_mass_g)
+) +
+  geom_point() +
+  geom_smooth()
+
+ggplot() +
+  geom_point(
+    data = penguins,
+    mapping = aes(x = flipper_length_mm, y = body_mass_g)
+  ) +
+  geom_smooth(
+    data = penguins,
+    mapping = aes(x = flipper_length_mm, y = body_mass_g)
+  )
+```
+
+#Válaszok
+1. 344 sor, 8 oszlop
+2. bill_length_mm
+a number denoting bill length (millimeters) /A pingvin csőrének mélysége milliméterben.
+
+3. a bill_length_mm és a bill_depth_mm között gyenge, nemlineáris kapcsolat figyelhető meg, nincs erős korreláció, nem követnek lineáris trendet. Különböző csoportok jelennek meg a csőr hossza és mélysége függvényében
+
+4. Informatívabb, a különböző fajok csőrmélységének mediánját, terjedelmét és eloszlását könnyen összehasonlíthatjuk, és az eltérések alapján következtethetünk arra, hogy a fajok között van-e jelentős különbség.
+
+5. A geom_point() működéséhez meg kell adni,hogy melyik változókat szeretnénk az x- és y-tengelyen ábrázolni.Pl: bill_length_mm (csőr hossza) az x-tengelyen, és a bill_depth_mm (csőr mélysége) az y-tengelyen. (aes(x = bill_length_mm, y = bill_depth_mm))
+
+6.Az na.rm argumentum azt határozza meg, hogy a hiányzó értékeket (NA) tartalmazó adatpontokat figyelmen kívül hagyja-e (igaz/hamis logikai érték). Ha az na.rm = TRUE, akkor az NA-kat automatikusan kiveszi az elemzésből.
+
+7. ?labs
+Felirat hozzáadása caption argumentummal.
+
+8.Globális szint: Ha az esztétika minden geomra vonatkozik 
+Geom szint: Ha az esztétika csak bizonyos geomokra érvényes
+
+9.A grafikon egy szórásdiagram lesz, ahol az x-tengely az úszóhosszt (flipper_length_mm), az y-tengely pedig a testtömeget (body_mass_g) ábrázolja. A pontok színe az island változó szerint csoportosítva jelenik meg. Az egyes csoportokhoz illesztett vonalak (görbék) jelennek meg, standard error nélkül (mert se=FALSE).
+
+10. A két grafikon nem néz ki máshogy, mivel mindkét kód ugyanazokat az adatokat és ugyanazokat a vizualizációs elemeket tartalmazza (különbség csak a kód felépítésében van).
+```{r}
+#1.3.ggplot2
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm, y = body_mass_g)
+) +
+  geom_point()
+```
+```{r}
+ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g)) + 
+  geom_point()
+```
+```{r}
+penguins |> 
+  ggplot(aes(x = flipper_length_mm, y = body_mass_g)) + 
+  geom_point()
+```
+```{r}
+#1.4 Eloszlások megjelenítése
+ggplot(penguins, aes(x = species)) +
+  geom_bar()
+
+```
+```{r}
+install.packages("forcats")
+library(forcats)
+
+ggplot(penguins, aes(x = fct_infreq(species))) +
+  geom_bar()
+```
+```{r}
+ggplot(penguins, aes(x = body_mass_g)) +
+  geom_histogram(binwidth = 200)
+```
+```{r}
+ggplot(penguins, aes(x = body_mass_g)) +
+  geom_histogram(binwidth = 20)
+ggplot(penguins, aes(x = body_mass_g)) +
+  geom_histogram(binwidth = 2000)
+```
+```{r}
+ggplot(penguins, aes(x = body_mass_g)) +
+  geom_density()
+#> Warning: Removed 2 rows containing non-finite outside the scale range
+#> (`stat_density()`).
+```
+#Feladatok (1.4.3)
+1.
+```{r}
+ggplot(data = penguins, aes(x = species)) +
+  geom_bar()
+
+```
+```{r}
+ggplot(data = penguins, aes(y = species)) +
+  geom_bar()
+
+```
+2.
+```{r}
+ggplot(penguins, aes(x = species)) +
+  geom_bar(color = "red")
+
+ggplot(penguins, aes(x = species)) +
+  geom_bar(fill = "red")
+```
+3.
+```{r}
+?geom_histogram
+
+```
+4.
+```{r}
+library(tidyverse)
+
+ggplot(diamonds, aes(x = carat)) +
+  geom_histogram()
+
+ggplot(diamonds, aes(x = carat)) +
+  geom_histogram(binwidth = 0.5) +
+  labs(title = "Binwidth = 0.5")
+
+ggplot(diamonds, aes(x = carat)) +
+  geom_histogram(binwidth = 0.1) +
+  labs(title = "Binwidth = 0.1")
+
+ggplot(diamonds, aes(x = carat)) +
+  geom_histogram(binwidth = 0.01) +
+  labs(title = "Binwidth = 0.01")
+
+```
+
+
+#Válaszok
+1. Amikor az x-tengelyen van, akkor a sávok függőlegesen helyezkednek el.
+Az x-tengely a fajok kategóriái, az y-tengelyen a sávok magassága azok gyakoriságát mutatja.
+Amikor az az y-tengelyen van:a sávok vízszintesen helyezkednek el.
+Az y-tengelyen a fajok, az x-tengelyen a sávok hossza pedig a gyakoriság.
+
+2.Az elsőnél a color a sávok körvonalának színét változtatja meg.A másodiknál a fill a sávok kitöltésének színét változtatja meg.
+
+3. A bins argumentum a geom_histogram() függvényben azt határozza meg, hogy hány binre / intervallumra osztjuk fel az adatok tartományát a hisztogram elkészítéséhez.
+
+4.A keskenyebb bin szélességek részletesebb képet adnak, míg a szélesebbek kevésbé.
+Nagyon keskeny bin szélesség apró kiugrásokat és egyedi mintázatokat mutathat, de zajos lehet. A szélesebb bin szélesség általános trendekhez, a keskenyebbek finomabb részletek esetén megfelelőbb lehet.
+
+```{r}
+#1.5 Visualizing relationships
+ggplot(penguins, aes(x = species, y = body_mass_g)) +
+  geom_boxplot()
+```
+```{r}
+ggplot(penguins, aes(x = body_mass_g, color = species)) +
+  geom_density(linewidth = 0.75)
+
+ggplot(penguins, aes(x = body_mass_g, color = species, fill = species)) +
+  geom_density(alpha = 0.5)
+```
+```{r}
+ggplot(penguins, aes(x = island, fill = species)) +
+  geom_bar()
+
+ggplot(penguins, aes(x = island, fill = species)) +
+  geom_bar(position = "fill")
+
+```
+```{r}
+ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g)) +
+  geom_point()
+```
+```{r}
+ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g)) +
+  geom_point(aes(color = species, shape = island))
+```
+```{r}
+ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g)) +
+  geom_point(aes(color = species, shape = species)) +
+  facet_wrap(~island)
+```
+#Feladatok
+1.
+```{r}
+?mpg
+str(mpg)
+
+```
+2.
+```{r}
+library(ggplot2)
+
+ggplot(mpg, aes(x = displ, y = hwy)) +
+  geom_point()
+
+ggplot(mpg, aes(x = displ, y = hwy, color = cty)) +
+  geom_point()
+
+ggplot(mpg, aes(x = displ, y = hwy, shape = class)) +
+  geom_point()
+
+ggplot(mpg, aes(x = displ, y = hwy, color = cty, shape = class)) +
+  geom_point()
+
+ggplot(mpg, aes(x = displ, y = hwy, size = displ, color = cty)) +
+  geom_point()
+
+
+```
+3.
+```{r}
+ggplot(mpg, aes(x = displ, y = hwy)) +
+  geom_point()
+
+ggplot(mpg, aes(x = displ, y = hwy, linewidth = cty)) +
+  geom_point()
+```
+4.
+```{r}
+ggplot(mpg, aes(x = displ, y = hwy, color = cty, size = cty, shape = class)) +
+  geom_point()
+
+ggplot(mpg, aes(x = displ, y = hwy, color = cty, size = cty, shape = cty)) +
+  geom_point() +
+  scale_shape_binned()
+
+```
+5.
+```{r}
+ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm, color = species)) +
+  geom_point()
+
+ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_point() +
+  facet_wrap(~ species)
+
+```
+6.
+```{r}
+ggplot(
+  data = penguins,
+  mapping = aes(
+    x = bill_length_mm, y = bill_depth_mm, 
+    color = species, shape = species
+  )
+) +
+  geom_point() +
+  labs(color = "Species")
+
+
+ggplot(
+  data = penguins,
+  mapping = aes(
+    x = bill_length_mm, y = bill_depth_mm, 
+    color = species, shape = species
+  )
+) +
+  geom_point() +
+  labs(color = "Species", shape = "Species") +
+  guides(color = guide_legend(override.aes = list(shape = 16)))
+
+```
+7.
+```{r}
+ggplot(penguins, aes(x = island, fill = species)) +
+  geom_bar(position = "fill")
+ggplot(penguins, aes(x = species, fill = island)) +
+  geom_bar(position = "fill")
+```
+
+#Válaszok
+1. Kategóriális változók (chr/factor): manufacturer, model,trans, drv, fl, class
+Numerikus (num/int): displ, year, cyl, cty, hwy
+
+2. A numerikus változók méret, szín vagy árnyékolás skála folyamatos.
+A kategóriális változók forma nem folyamatos skálán ábrázolhatók, minden kategória egyedi alakban/értékkel jelenik meg.
+
+3. 
+
+4. A shape csak kategoriális változókhoz használható, nem lehet folyamatos (numerikus) változót hozzárendelni a geom_point() esetén. 
+
+5. A coloring segít elkülöníteni a különböző fajokat a szórásdiagramon.A faceting egítségével különböző diagramokat készíthetünk a kategóriákra (jelen esetben a fajokra) vonatkozóan. Mindkettő segít a különbségek kiemelésében, megértésében, de a coloring inkább a változók közötti kapcsolatot mutatja, míg a faceting az egyes fajokat külön hasonlítja össze.
+
+6. A két különálló legend azért jelenik meg, mert a color és a shape különállóak, és mindegyik sajátot generál. Össze kell vonni a guides és a labs fügvényekkel, ugyanazt a változót (species) használva mindkét esetben, és egy közöset létrehozni.
+
+7. Az első a szigeti eloszlás szempontjából ad választ,vagyis, hogy milyen arányban fordulnak elő a különböző fajok az egyes szigeteken. A második a fajok eloszlására ad választ az egyes szigetek alapján, vagyis, hogy hogyan oszlanak el a szigetek az egyes fajok között.
+
+```{r}
+#1.6 Saving your plots
+ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g)) +
+  geom_point()
+ggsave(filename = "penguin-plot.png")
+```
+#Feladatok
+1.
+```{r}
+ggplot(mpg, aes(x = class)) +
+  geom_bar()
+ggplot(mpg, aes(x = cty, y = hwy)) +
+  geom_point()
+ggsave("mpg-plot.png")
+```
+Válasz: A mpg-plot.png fájlba a szórásdiagram lesz elmentve, mivel az ggsave() a legutolsó ábrát menti el, és az a második ábra (szórásdiagram).
+
+2.Ahhoz, hogy a plotot PDF formátumban mentsük el PNG helyett, a fájl kiterjesztését kell .pdf-re módosítani, a ggsave() függvényhez meg kell adni a kívánt fájlformátum kiterjesztését.
+```{r}
+?ggsave
+ggsave("mpg-plot.pdf")
+
+```
+
